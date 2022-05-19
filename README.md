@@ -1,2 +1,2 @@
-# -eshop-project-infra
+# eshop-project-infra
  eshop - Infraestrutura
