@@ -1,0 +1,81 @@
+---
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: echo1-ingress
+  namespace: eshop-resources
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /echo1
+            pathType: Prefix
+            backend:
+              service:
+                name: echo1-service
+                port:
+                  number: 80
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: echo1
+  name: echo1-service
+  namespace: eshop-resources
+spec:
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  selector:
+    app: echo1
+  type: ClusterIP
+status:
+  loadBalancer: {}
+
+---
+kind: StatefulSet
+apiVersion: apps/v1
+metadata:
+  name: echo1
+  namespace: eshop-resources
+spec:
+  serviceName: echo1-service
+  podManagementPolicy: Parallel
+  replicas: 1
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: echo1
+  template:
+    metadata:
+      labels:
+        app: echo1
+    spec:
+      terminationGracePeriodSeconds: 1
+      containers:
+        - name: echo1
+          image: luizcarlosfaria/echo-server:latest
+          imagePullPolicy: Always
+          env:
+            - name: TZ
+              value: "America/Sao_Paulo"
+
+            - name: HEADER_COLOR
+              value: "blue-600"
+
+            - name: APP_NAME
+              value: "Echo 1"
+                            
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          
+          
+          

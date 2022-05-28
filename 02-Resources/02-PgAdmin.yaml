@@ -1,0 +1,218 @@
+## username: eshop@gago.io
+## password: eshopSuperSecret
+
+---
+kind: Secret
+apiVersion: v1
+type: Opaque
+metadata:
+  name: pgadmin
+  namespace: eshop-resources
+data:
+  pgadmin-username: ZXNob3BAZ2Fnby5pbw==
+  pgadmin-password: ZXNob3BTdXBlclNlY3JldA==
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pgadmin-config
+  namespace: eshop-resources
+data:
+  servers.json: |
+    {
+        "Servers": {
+          "1": {
+            "Name": "eshop-rw",
+            "Group": "eshop-cluster",
+            "Port": 5432,
+            "Username": "postgres",
+            "Host": "eshop-postgres-cluster-rw.eshop-resources.svc.cluster.local",
+            "SSLMode": "prefer",
+            "MaintenanceDB": "postgres"
+          },
+          "2": {
+            "Name": "eshop-ro",
+            "Group": "eshop-cluster",
+            "Port": 5432,
+            "Username": "postgres",
+            "Host": "eshop-postgres-cluster-ro.eshop-resources.svc.cluster.local",
+            "SSLMode": "prefer",
+            "MaintenanceDB": "postgres"
+          },
+          "3": {
+            "Name": "eshop-any",
+            "Group": "eshop-cluster",
+            "Port": 5432,
+            "Username": "postgres",
+            "Host": "eshop-postgres-cluster-any.eshop-resources.svc.cluster.local",
+            "SSLMode": "prefer",
+            "MaintenanceDB": "postgres"
+          },
+          "4": {
+            "Name": "eshop-r",
+            "Group": "eshop-cluster",
+            "Port": 5432,
+            "Username": "postgres",
+            "Host": "eshop-postgres-cluster-r.eshop-resources.svc.cluster.local",
+            "SSLMode": "prefer",
+            "MaintenanceDB": "postgres"
+          }
+        }
+    }
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pgadmin-config-distro
+  namespace: eshop-resources
+data:
+  config_distro.py: |
+    DEFAULT_SERVER='0.0.0.0'
+    DEBUG=True
+    LOG_FILE='/var/lib/pgadmin/pgadmin4.log'
+
+---
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: pgadmin-ingress
+  namespace: eshop-resources
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+    - host: "pgadmin-188-40-114-31.nip.io"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: pgadmin-service
+                port:
+                  number: 80
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: pgadmin
+  name: pgadmin-service
+  namespace: eshop-resources
+spec:
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      #nodePort: 30779
+  selector:
+    app: pgadmin
+  type: ClusterIP
+status:
+  loadBalancer: {}
+
+---
+kind: StatefulSet
+apiVersion: apps/v1
+metadata:
+  name: pgadmin
+  namespace: eshop-resources
+spec:
+  serviceName: pgadmin-service
+  podManagementPolicy: Parallel
+  replicas: 1
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: pgadmin
+  template:
+    metadata:
+      labels:
+        app: pgadmin
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: pgadmin
+          image: dpage/pgadmin4:6.9
+          imagePullPolicy: Always
+          env:
+            - name: TZ
+              value: "America/Sao_Paulo"
+              
+            - name: PGADMIN_CONFIG_PROXY_X_FOR_COUNT
+              value: "1"
+
+            - name: PGADMIN_CONFIG_PROXY_X_PROTO_COUNT
+              value: "1"
+
+            - name: PGADMIN_CONFIG_PROXY_X_HOST_COUNT
+              value: "1"
+
+            - name: PGADMIN_CONFIG_PROXY_X_PORT_COUNT
+              value: "0"
+
+            - name: PGADMIN_CONFIG_PROXY_X_PREFIX_COUNT
+              value: "0"
+
+            - name: PGADMIN_CONFIG_SERVER_MODE
+              value: "True"
+
+            - name: PGADMIN_CONFIG_LOG_FILE
+              value: "/var/lib/pgadmin/pgadmin4.log"
+
+            - name: PGADMIN_SERVER_JSON_FILE
+              value: "/pgadmin4/servers.json"
+
+            - name: PGADMIN_DEFAULT_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: pgadmin
+                  key: pgadmin-username
+
+            - name: PGADMIN_DEFAULT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgadmin
+                  key: pgadmin-password
+
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          volumeMounts:
+
+            - name: pgadmin-config
+              mountPath: /pgadmin4/servers.json
+              subPath: servers.json
+              readOnly: true
+
+            - name: pgadmin-config-distro
+              mountPath: /pgadmin4/config_distro.py
+              subPath: config_distro.py
+              readOnly: true
+
+            - name: pgadmin-data
+              mountPath: /var/lib/pgadmin
+      volumes:
+
+        - name: pgadmin-config
+          configMap:
+            name: pgadmin-config
+
+        - name: pgadmin-config-distro
+          configMap:
+            name: pgadmin-config-distro
+
+  volumeClaimTemplates:
+    - metadata:
+        name: pgadmin-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 3Gi
+    

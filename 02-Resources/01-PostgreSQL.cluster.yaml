@@ -1,0 +1,46 @@
+---
+apiVersion: v1
+data:
+## username: eshop
+## password: J9Of0497BM@c$Bs
+  username: ZXNob3A=
+  password: SjlPZjA0OTdCTUBjJEJz
+kind: Secret
+metadata:
+  name: app-secret
+  namespace: eshop-resources
+type: kubernetes.io/basic-auth
+
+---
+apiVersion: v1
+data:
+## username: postgres
+## password: postgresJ9Of0497BM@c$Bs
+  username: cG9zdGdyZXM=
+  password: cG9zdGdyZXNKOU9mMDQ5N0JNQGMkQnM=
+kind: Secret
+metadata:
+  name: superuser-secret
+  namespace: eshop-resources
+type: kubernetes.io/basic-auth
+
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: eshop-postgres-cluster
+  namespace: eshop-resources
+spec:
+  instances: 3
+  superuserSecret:
+    name: superuser-secret
+  bootstrap:
+    initdb:
+      database: eshop
+      owner: eshop
+      encoding: "LATIN1"
+      secret:
+        name: app-secret
+  storage:
+    storageClass: local-path
+    size: 3Gi

@@ -1,0 +1,21 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: rabbitmq-cluster
+  namespace: eshop-resources
+  annotations:
+    rabbitmq.com/topology-allowed-namespaces: "my-app"
+spec:
+  replicas: 2
+
+---
+apiVersion: rabbitmq.com/v1beta1
+kind: Queue
+metadata:
+  name: rabbitmq-log-queue
+  namespace: eshop-resources
+spec:
+  name: enterprise-application-log
+  rabbitmqClusterReference:
+    name: rabbitmq-cluster
+    namespace: eshop-resources
