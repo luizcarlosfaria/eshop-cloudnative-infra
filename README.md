@@ -2,7 +2,19 @@
 
 Projeto destinado à gerenciar a infraestrutura de "produção".
 
-### [luizcarlosfaria/eshop-project](../../../../luizcarlosfaria/eshop-project)
+* Em `/01-ClusterSetup/` temos scripts e configurações para a construção e configuração do cluster Kubernetes.
+* Em `/02-Resources/` temos a construção dos componentes de infraestrutura necessários para o projeto.
+
+Ambas as pastas possuem um script `00-main.sh` que pode ser usado da seguinte forma:
+
+| Script | Descrição |
+| ------ | ------ |
+| `./00-main.sh -i` | Realiza a **instação** dos componentes | 
+| `./00-main.sh -u` | Realiza a **desinstalação** dos componentes | 
+
+## [luizcarlosfaria/eshop-project](../../../../luizcarlosfaria/eshop-project)
+
+Esse projeto é parte do projeto [luizcarlosfaria/eshop-project](../../../../luizcarlosfaria/eshop-project)
   
 ## Nossa pseudo-infraestrutura de produção
 
