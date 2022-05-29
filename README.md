@@ -1,7 +1,9 @@
 # Infraestrutura
- 
- Root project [/luizcarlosfaria/eshop-project](../../../../luizcarlosfaria/eshop-project)
 
+Projeto destinado à gerenciad a infraestrutura de "produção".
+
+### [luizcarlosfaria/eshop-project](../../../../luizcarlosfaria/eshop-project)
+  
 ## Nossa pseudo-infraestrutura de produção
 
 Vale lembrar que esse projeto tem a finalidade de demonstrar aborgagens mais próximas do dia-a-dia de produção.
