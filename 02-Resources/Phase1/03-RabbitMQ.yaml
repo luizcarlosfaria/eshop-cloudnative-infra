@@ -1,0 +1,174 @@
+---
+kind: RabbitmqCluster
+apiVersion: rabbitmq.com/v1beta1
+metadata:
+  labels:
+    app: rabbitmq
+  name: rabbitmq
+  namespace: eshop-resources
+spec:
+  replicas: 3
+  image: rabbitmq:3.9.18-management
+  service:
+    type: ClusterIP
+  persistence:
+    storageClassName: local-path
+    storage: 10Gi
+  resources:
+    requests:
+      cpu: 4
+      memory: 10Gi
+    limits:
+      cpu: 4
+      memory: 10Gi
+  rabbitmq:
+    additionalConfig: |
+      cluster_partition_handling = pause_minority
+      vm_memory_high_watermark_paging_ratio = 0.99
+      disk_free_limit.relative = 1.0
+      collect_statistics = fine
+      collect_statistics_interval = 1000
+
+
+---
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: rabbitmq-ingress
+  namespace: eshop-resources
+  #annotations:
+    #ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+    - host: "rabbitmq-188-40-114-31.nip.io"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: rabbitmq
+                port:
+                  number: 15672
+
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: krakend-config
+  namespace: eshop-resources
+data:
+  krakend.json: |
+    {
+        "$schema": "https://www.krakend.io/schema/v3.json",
+        "version": 3,
+        "extra_config": {
+            "telemetry/logging": {
+                "level": "DEBUG",
+                "prefix": "[KRAKEND]",
+                "syslog": false,
+                "stdout": true,
+                "format": "logstash"
+            },
+            "telemetry/logstash": {
+                "enabled": false
+            }
+        },
+        "timeout": "3000ms",
+        "cache_ttl": "300s",
+        "output_encoding": "json",
+        "name": "krakend01",
+        "port": 8080,
+        "endpoints": [
+            {
+                "endpoint": "/http-log/{route}",
+                "method": "POST",
+                "output_encoding": "json",
+                "extra_config": {},
+                "backend": [
+                    {
+                        "url_pattern": "/",
+                        "encoding": "json",
+                        "method": "POST",
+                        "extra_config": {
+                            "backend/amqp/producer": {
+                                "name": "krakend-log-exchange",
+                                "exchange": "krakend-log-queue",
+                                "durable": true,
+                                "delete": false,
+                                "no_wait": true,
+                                "no_local": false,
+                                "mandatory": false,
+                                "routing_key": "Route"
+                            }
+                        },
+                        "host": [
+                            "amqp://log_user:log_pass@rabbitmq.svc:5672/log"
+                        ],
+                        "disable_host_sanitize": true
+                    }
+                ]
+            }
+        ]
+    }
+
+
+
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  labels:
+    app: krakend
+  name: krakend
+  namespace: eshop-resources
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: krakend
+  template:
+    metadata:
+      labels:
+        app: krakend
+    spec:
+      containers:
+        - name: krakend
+          args:
+            - run
+            - --config
+            - /etc/krakend/krakend.json
+          image: devopsfaith/krakend:2.0.1
+          ports:
+            - containerPort: 8080
+          resources: {}
+          volumeMounts:
+            - name: krakend-config
+              mountPath: /etc/krakend/krakend.json
+              subPath: krakend.json
+              readOnly: true
+      restartPolicy: Always
+      volumes:
+        - name: krakend-config
+          configMap:
+            name: krakend-config
+
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: krakend
+  name: krakend-service
+  namespace: eshop-resources
+spec:
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  selector:
+    app: krakend
+  type: ClusterIP
+status:
+  loadBalancer: {}

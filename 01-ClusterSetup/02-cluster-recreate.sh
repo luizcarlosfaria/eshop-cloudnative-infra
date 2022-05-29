@@ -19,6 +19,8 @@ k3d cluster delete eshop
 
 rm -R -f /docker/k3d/storage/**
 
+sleep 2
+
 if [ "$operation" = "apply" ]; then
   
     # Permissões #################################################################

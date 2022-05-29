@@ -12,10 +12,11 @@ kubectl apply -f ./03.2-dashboard.ingress.yaml
 
 # bash alias #################################################################
 
-cat ~/.bash_aliases | grep -v dash_set | grep -v dash_print >~/.bash_aliases
+cat ~/.bash_aliases | grep -v kdt= >~/.bash_aliases
 
 cat <<EOF | tee ~/.bash_aliases
-alias dash_set_token='token=$(kubectl -n kubernetes-dashboard get secret | grep admin-user-token | cut -d " " -f1)'
-alias dash_print_token='kubectl -n kubernetes-dashboard describe secret $token'
-alias kdt='dash_set_token && dash_print_token'
+alias kdt='kubectl -n kubernetes-dashboard describe secret \$(kubectl -n kubernetes-dashboard get secret | grep admin-user-token | cut -d " " -f1)'
 EOF
+
+cat ~/.bash_aliases
+

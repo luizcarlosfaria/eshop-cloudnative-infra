@@ -11,4 +11,19 @@
 #sudo install -o root -g root -m 0755 kompose /usr/local/bin/kompose
 #rm ./kompose
 
-echo 'Empty'
+
+# go #################################################################
+#curl -L https://go.dev/dl/go1.18.2.linux-amd64.tar.gz -o ./go1.18.2.linux-amd64.tar.gz
+#rm -rf /usr/local/go && tar -C /usr/local -xzf go1.18.2.linux-amd64.tar.gz
+#rm ./go1.18.2.linux-amd64.tar.gz
+export PATH=$PATH:/usr/local/go/bin
+#echo $PATH
+go version
+
+# cmctl #################################################################
+#OS=$(go env GOOS); ARCH=$(go env GOARCH); curl -sSL -o cmctl.tar.gz https://github.com/cert-manager/cert-manager/releases/download/v1.7.2/cmctl-$OS-$ARCH.tar.gz
+#tar xzf cmctl.tar.gz
+#sudo mv cmctl /usr/local/bin
+
+
+

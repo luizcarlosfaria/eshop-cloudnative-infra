@@ -1,0 +1,52 @@
+---
+kind: Vhost
+apiVersion: rabbitmq.com/v1beta1
+metadata:
+  name: rabbitmq-eshop-vhost
+  namespace: eshop-resources
+spec:
+  name: eshop
+  rabbitmqClusterReference:
+    name: rabbitmq
+
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: rabbitmq-eshop-secret
+  namespace: eshop-resources
+type: kubernetes.io/basic-auth
+stringData:
+  username: eshop_user
+  password: eshop_pass
+
+
+---
+kind: User
+apiVersion: rabbitmq.com/v1beta1
+metadata:
+  name: rabbitmq-eshop-user
+  namespace: eshop-resources
+spec:
+  rabbitmqClusterReference:
+    name: rabbitmq
+#  tags:
+#  - administrator
+  importCredentialsSecret:
+    name: rabbitmq-eshop-secret
+
+---
+kind: Permission
+apiVersion: rabbitmq.com/v1beta1
+metadata:
+  name: rabbitmq-eshop-permission
+  namespace: eshop-resources
+spec:
+  vhost: "eshop"
+  user: "eshop_user"
+  permissions:
+    write: ".*"
+    configure: ".*"
+    read: ".*"
+  rabbitmqClusterReference:
+    name: rabbitmq

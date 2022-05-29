@@ -14,6 +14,8 @@ operation=${operation:-apply}
 
 echo "operation: $operation"
 
+chmod -R +x ../**/*.sh
+
 ## v1 ------------
 ################################
 
@@ -31,6 +33,10 @@ if [ "$operation" = "apply" ]; then
 
     ./06-echo.sh $1
 
+    ./07-CertManager.sh $1
+
+    ./08-RabbitMQ-Operator.sh $1
+
 fi
 
 if [ "$operation" = "delete" ]; then
@@ -38,3 +44,5 @@ if [ "$operation" = "delete" ]; then
 
     ./02-cluster-recreate.sh $1
 fi
+
+
