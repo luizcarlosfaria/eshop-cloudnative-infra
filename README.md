@@ -1,6 +1,6 @@
 # Infraestrutura
 
-Projeto destinado à gerenciad a infraestrutura de "produção".
+Projeto destinado à gerenciar a infraestrutura de "produção".
 
 ### [luizcarlosfaria/eshop-project](../../../../luizcarlosfaria/eshop-project)
   
