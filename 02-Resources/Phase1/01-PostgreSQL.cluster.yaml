@@ -38,9 +38,12 @@ spec:
     initdb:
       database: eshop
       owner: eshop
-      encoding: "LATIN1"
+      encoding: "UTF8"
+      postInitSQL:
+        - CREATE DATABASE "eshop-teste1" WITH OWNER = eshop ENCODING = 'UTF8' CONNECTION LIMIT = -1;
+        - CREATE DATABASE "eshop-teste2" WITH OWNER = eshop ENCODING = 'UTF8' CONNECTION LIMIT = -1;
       secret:
         name: app-secret
   storage:
     storageClass: local-path
-    size: 3Gi
+    size: 4Gi

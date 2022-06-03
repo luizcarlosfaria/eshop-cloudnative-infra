@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "$(tput setaf 2)Implantando echo1 e echo2 para validação do ambiente...$(tput sgr0)"
+
 kubectl apply -f ./06.1-echo1.yaml
 
 kubectl apply -f ./06.2-echo2.yaml

@@ -138,7 +138,7 @@ spec:
       containers:
         - name: pgadmin
           image: dpage/pgadmin4:6.9
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent #Always
           env:
             - name: TZ
               value: "America/Sao_Paulo"

@@ -38,17 +38,15 @@ status:
   loadBalancer: {}
 
 ---
-kind: StatefulSet
+kind: Deployment
 apiVersion: apps/v1
 metadata:
+  labels:
+    app: echo2
   name: echo2
   namespace: eshop-resources
 spec:
-  serviceName: echo2-service
-  podManagementPolicy: Parallel
   replicas: 1
-  updateStrategy:
-    type: RollingUpdate
   selector:
     matchLabels:
       app: echo2
@@ -57,11 +55,10 @@ spec:
       labels:
         app: echo2
     spec:
-      terminationGracePeriodSeconds: 1
       containers:
         - name: echo2
           image: luizcarlosfaria/echo-server:latest
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent #Always
           env:
             - name: TZ
               value: "America/Sao_Paulo"

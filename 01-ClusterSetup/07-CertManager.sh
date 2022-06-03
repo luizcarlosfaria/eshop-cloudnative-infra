@@ -14,10 +14,11 @@ operation=${operation:-apply}
 
 echo "operation: $operation"
 
+echo "$(tput setaf 2)Implantando Cert Manager...$(tput sgr0)"
 kubectl ${operation} -f https://github.com/cert-manager/cert-manager/releases/download/v1.8.0/cert-manager.yaml
 
 if [ "$operation" = "apply" ]; then
 
-cmctl check api --wait=3m
+cmctl check api --wait=5m
 
 fi

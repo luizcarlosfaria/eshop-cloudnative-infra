@@ -12,6 +12,8 @@ done
 
 operation=${operation:-apply}
 
+set echo off
+
 echo "operation: $operation"
 
 chmod -R +x ../**/*.sh
@@ -40,7 +42,6 @@ if [ "$operation" = "apply" ]; then
 fi
 
 if [ "$operation" = "delete" ]; then
-    echo "operation=delete"
 
     ./02-cluster-recreate.sh $1
 fi

@@ -1,0 +1,46 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  labels:
+    app: redis
+  name: redis
+  namespace: eshop-resources
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - image: redis:6-alpine
+          name: redis
+          ports:
+            - containerPort: 6379
+          resources: {}
+      restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: redis
+  name: redis
+  namespace: eshop-resources
+spec:
+  ports:
+    - name: "6379"
+      port: 6379
+      #targetPort: 6379
+  selector:
+    app: redis
+  type: ClusterIP
+status:
+  loadBalancer: {}
+
+
