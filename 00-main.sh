@@ -18,12 +18,30 @@ done
 
 operation=${operation:-apply}
 
+set echo off
+
 echo "operation: $operation"
 
-echo "$(tput setaf 2)Implantando RabbitMQ Cluster Operator...$(tput sgr0)"
+chmod -R +x ./**/*.sh
 
-kubectl ${operation} -f "https://github.com/rabbitmq/cluster-operator/releases/latest/download/cluster-operator.yml"
 
-echo "$(tput setaf 2)Implantando RabbitMQ Messaging Topology Operator...$(tput sgr0)"
+if [ "$operation" = "apply" ]; then
 
-kubectl ${operation} -f "https://github.com/rabbitmq/messaging-topology-operator/releases/latest/download/messaging-topology-operator-with-certmanager.yaml"
+    cd ./01-ClusterSetup/
+
+    ./00-main.sh $1
+
+    sleep 10
+
+    cd ../02-Resources/
+
+    ./00-main.sh $1
+
+fi
+
+if [ "$operation" = "delete" ]; then
+
+    cd ./01-ClusterSetup/
+
+    ./00-main.sh -u
+fi

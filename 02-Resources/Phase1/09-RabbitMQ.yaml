@@ -1,3 +1,9 @@
+#=============================================================================
+# Copyright Luiz Carlos Faria 2022. All Rights Reserved.
+# This file is licensed under the MIT License.
+# License text available at https://opensource.org/licenses/MIT
+#=============================================================================
+
 ---
 kind: RabbitmqCluster
 apiVersion: rabbitmq.com/v1beta1
@@ -8,7 +14,7 @@ metadata:
   namespace: eshop-resources
 spec:
   replicas: 3
-  image: rabbitmq:3.9.18-management
+  image: rabbitmq:3.10.5-management
   service:
     type: ClusterIP
   persistence:

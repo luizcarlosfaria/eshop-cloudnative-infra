@@ -5,40 +5,22 @@
 #=============================================================================
 
 ---
-kind: Service
-apiVersion: v1
-metadata:
-  name: gago-dashboard-service
-  namespace: kubernetes-dashboard
-  labels:
-    k8s-app: kubernetes-dashboard
-spec:
-  ports:
-    - protocol: TCP
-      port: 8443
-      targetPort: 8443
-      nodePort: 30777
-  selector:
-    k8s-app: kubernetes-dashboard
-  type: LoadBalancer
-
----
 kind: Ingress
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: gago-dashboard-ingress
-  namespace: kubernetes-dashboard
+  name: gago-minio-ingress
+  namespace: minio-operator
   annotations:
     ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   rules:
-    - host: "dash-188-40-114-31.nip.io"
+    - host: "minio-188-40-114-31.nip.io"
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: kubernetes-dashboard
+                name: console
                 port:
-                  number: 443
+                  number: 9090

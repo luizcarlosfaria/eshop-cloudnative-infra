@@ -1,5 +1,11 @@
 #!/bin/bash
 
+#=============================================================================
+# Copyright Luiz Carlos Faria 2022. All Rights Reserved.
+# This file is licensed under the MIT License.
+# License text available at https://opensource.org/licenses/MIT
+#=============================================================================
+
 while getopts ui flag; do
     case "${flag}" in
     u) operation=delete ;;
@@ -8,6 +14,7 @@ while getopts ui flag; do
 done
 
 operation=${operation:-apply}
+echo "operation: $operation"
 
 # drop old cluster #################################################################
 
@@ -32,8 +39,9 @@ if [ "$operation" = "apply" ]; then
     k3d cluster create eshop \
         -p "80:80@loadbalancer" \
         -p "443:443@loadbalancer" \
+        -p "9090:9090@loadbalancer" \
         -p "30777-30797:30777-30797@loadbalancer" \
-        --servers 1 \
+        --servers 7 \
         --volume /docker/k3d/storage:/var/lib/rancher/k3s/storage@all
 
     cat ~/.kube/config

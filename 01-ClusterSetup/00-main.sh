@@ -1,7 +1,12 @@
 #!/bin/bash
 
+#=============================================================================
+# Copyright Luiz Carlos Faria 2022. All Rights Reserved.
+# This file is licensed under the MIT License.
+# License text available at https://opensource.org/licenses/MIT
+#=============================================================================
+
 ################################
-## v1 ------------
 
 while getopts ui flag; do
     case "${flag}" in
@@ -18,32 +23,33 @@ echo "operation: $operation"
 
 chmod -R +x ../**/*.sh
 
-## v1 ------------
 ################################
 
 if [ "$operation" = "apply" ]; then
 
-    ./01-tools.sh $1
+    ./01-tools.sh -i
 
-    ./02-cluster-recreate.sh $1
+    ./02-cluster-recreate.sh -i
 
-    ./03-dashboard.sh $1
+    ./03-dashboard.sh -i
 
-    ./04-namespaces.sh $1
+    ./04-namespaces.sh -i
 
-    ./05-CloudNativePG.sh $1
+    ./05-CloudNativePG.sh -i
 
-    ./06-echo.sh $1
+    ./06-echo.sh -i
 
-    ./07-CertManager.sh $1
+    ./07-CertManager.sh -i
 
-    ./08-RabbitMQ-Operator.sh $1
+    ./08-RabbitMQ-Operator.sh -i
+
+    ./09-Minio.sh -i
 
 fi
 
 if [ "$operation" = "delete" ]; then
 
-    ./02-cluster-recreate.sh $1
+    ./02-cluster-recreate.sh -u
 fi
 
 
