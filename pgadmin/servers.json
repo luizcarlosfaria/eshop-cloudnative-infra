@@ -1,0 +1,13 @@
+{
+    "Servers": {
+        "1": {
+            "Name": "RabbitMQ-Eshop",
+            "Group": "gago-io",
+            "Host": "postgres",
+            "Port": 5432,
+            "Username": "eshop_user",
+            "SSLMode": "prefer",
+            "MaintenanceDB": "postgres"
+        }
+    }
+}
