@@ -25,7 +25,7 @@ echo "operation: $operation"
 ## v1 ------------
 ################################
 
-kubectl ${operation} -f ./Phase1
+kubectl ${operation} -f ./01
 
 #kubectl scale -n minio-operator deployment minio-operator --replicas=1
 
@@ -34,9 +34,9 @@ kubectl ${operation} -f ./Phase1
 echo "$(tput setaf 2)Aguardando subida do cluster RabbitMQ...$(tput sgr0)"
 kubectl -n eshop-resources wait --timeout=5m --for=condition=ClusterAvailable rabbitmqclusters.rabbitmq.com rabbitmq
 
-kubectl ${operation} -f ./Phase2
+kubectl ${operation} -f ./02
 
-kubectl ${operation} -f ./Phase3
+kubectl ${operation} -f ./03
 
 
 ./01-wait.sh

@@ -1,0 +1,103 @@
+#=============================================================================
+# Copyright Luiz Carlos Faria 2022. All Rights Reserved.
+# This file is licensed under the MIT License.
+# License text available at https://opensource.org/licenses/MIT
+#=============================================================================
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak
+  namespace: eshop-resources
+  labels:
+    app: keycloak
+spec:
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: keycloak
+  type: ClusterIP
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+  namespace: eshop-resources
+  labels:
+    app: keycloak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      containers:
+      - name: keycloak
+        image: quay.io/keycloak/keycloak:18.0.1
+        args: ["start-dev"]
+        env:
+        - name: KEYCLOAK_ADMIN
+          value: "admin"
+        - name: KEYCLOAK_ADMIN_PASSWORD
+          value: "admin"
+        - name: KC_PROXY
+          value: "edge"
+        ports:
+        - name: http
+          containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /realms/master
+            port: 8080
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: keycloak
+  namespace: eshop-resources
+spec:
+  tls:
+    - hosts:
+      - keycloak-188-40-114-31.nip.io
+  rules:
+  - host: keycloak-188-40-114-31.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: keycloak
+            port:
+              number: 8080
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: keycloak-id
+  namespace: eshop-resources
+spec:
+  tls:
+    - hosts:
+      - id-188-40-114-31.nip.io
+  rules:
+  - host: id-188-40-114-31.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: keycloak
+            port:
+              number: 8080              

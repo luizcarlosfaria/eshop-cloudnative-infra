@@ -6,29 +6,46 @@
 
 ---
 apiVersion: v1
+kind: Secret
+type: kubernetes.io/basic-auth
+metadata:
+  name: app-secret
+  namespace: eshop-resources
 data:
 ## username: eshop
 ## password: J9Of0497BM@c$Bs
   username: ZXNob3A=
   password: SjlPZjA0OTdCTUBjJEJz
-kind: Secret
-metadata:
-  name: app-secret
-  namespace: eshop-resources
-type: kubernetes.io/basic-auth
+
 
 ---
 apiVersion: v1
+kind: Secret
+type: kubernetes.io/basic-auth
+metadata:
+  name: kong-secret
+  namespace: eshop-resources
+data:
+## username: konguser
+## password: qAix6zjWBLpZ%6Tk&B0u
+  username: a29uZ3VzZXI=
+  password: cUFpeDZ6aldCTHBaJTZUayZCMHU=
+
+
+---
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/basic-auth
+metadata:
+  name: superuser-secret
+  namespace: eshop-resources
 data:
 ## username: postgres
 ## password: postgresJ9Of0497BM@c$Bs
   username: cG9zdGdyZXM=
   password: cG9zdGdyZXNKOU9mMDQ5N0JNQGMkQnM=
-kind: Secret
-metadata:
-  name: superuser-secret
-  namespace: eshop-resources
-type: kubernetes.io/basic-auth
+
+
 
 ---
 apiVersion: postgresql.cnpg.io/v1
@@ -46,8 +63,9 @@ spec:
       owner: eshop
       encoding: "UTF8"
       postInitSQL:
-        - CREATE DATABASE "eshop-teste1" WITH OWNER = eshop ENCODING = 'UTF8' CONNECTION LIMIT = -1;
-        - CREATE DATABASE "eshop-teste2" WITH OWNER = eshop ENCODING = 'UTF8' CONNECTION LIMIT = -1;
+        - CREATE DATABASE kong  WITH OWNER = eshop ENCODING = 'UTF8' CONNECTION LIMIT = -1;
+        - CREATE ROLE kong_user WITH LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT NOREPLICATION CONNECTION LIMIT -1 PASSWORD 'qAix6zjWBLpZ%6Tk&B0u';
+        - GRANT ALL ON DATABASE kong TO kong_user;
       secret:
         name: app-secret
   storage:
