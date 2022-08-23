@@ -12,9 +12,9 @@ Ambas as pastas possuem um script `00-main.sh` que pode ser usado da seguinte fo
 | `./00-main.sh -i` | Realiza a **instação** dos componentes | 
 | `./00-main.sh -u` | Realiza a **desinstalação** dos componentes | 
 
-## [luizcarlosfaria/eshop-project](../../../../luizcarlosfaria/eshop-project)
+## [luizcarlosfaria/eshop-cloudnative](../../../../luizcarlosfaria/eshop-cloudnative)
 
-Esse projeto é parte do projeto [luizcarlosfaria/eshop-project](../../../../luizcarlosfaria/eshop-project)
+Esse projeto é parte do projeto [luizcarlosfaria/eshop-cloudnative](../../../../luizcarlosfaria/eshop-cloudnative)
   
 ## Nossa pseudo-infraestrutura de produção
 
