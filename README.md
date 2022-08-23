@@ -1,4 +1,4 @@
-# Infraestrutura
+# Infraestrutura | eshop-cloudnative-infra
 
 Projeto destinado à gerenciar a infraestrutura de "produção".
 
