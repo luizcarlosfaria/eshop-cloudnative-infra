@@ -8,45 +8,13 @@
 
 echo "$(tput setaf 2)Instalando ferramentas...$(tput sgr0)"
 
-
-# kubectl #################################################################
-FILE=/usr/local/bin/kubectl
-FILE_NAME=kubectl
-if [ -f "$FILE" ]; then
-    echo "$(tput setaf 2)$FILE_NAME está instalado!$(tput sgr0)"
-    kubectl version --short
-else 
-    echo "$(tput setaf 2)Instalando $FILE_NAME...$(tput sgr0)"
-
-    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-    sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-    rm ./kubectl
-fi
-
-
-# kompose #################################################################
-FILE=/usr/local/bin/kompose
-FILE_NAME=kompose
-if [ -f "$FILE" ]; then
-    echo "$(tput setaf 2)$FILE_NAME está instalado!$(tput sgr0)"
-     kompose version
-else 
-    echo "$(tput setaf 2)Instalando $FILE_NAME...$(tput sgr0)"
-
-    curl -L https://github.com/kubernetes/kompose/releases/download/v1.26.1/kompose-linux-amd64 -o kompose
-    sudo install -o root -g root -m 0755 kompose /usr/local/bin/kompose
-    rm ./kompose
-
-fi
-
-
 # golang #################################################################
 FILE=/usr/local/go/bin/go
 FILE_NAME=go
 if [ -f "$FILE" ]; then
     echo "$(tput setaf 2)$FILE_NAME está instalado!$(tput sgr0)"
     go version
-else 
+else
     echo "$(tput setaf 2)Instalando $FILE_NAME...$(tput sgr0)"
 
     curl -L https://go.dev/dl/go1.18.2.linux-amd64.tar.gz -o ./go1.18.2.linux-amd64.tar.gz
@@ -56,57 +24,58 @@ else
     echo $PATH
 fi
 
-
 # cmctl #################################################################
 FILE=/usr/local/bin/cmctl
 FILE_NAME=cmctl
 if [ -f "$FILE" ]; then
     echo "$(tput setaf 2)$FILE_NAME está instalado!$(tput sgr0)"
     cmctl version
-else 
+else
     echo "$(tput setaf 2)Instalando $FILE_NAME...$(tput sgr0)"
-    
-    OS=$(go env GOOS); ARCH=$(go env GOARCH); curl -sSL -o cmctl.tar.gz https://github.com/cert-manager/cert-manager/releases/download/v1.7.2/cmctl-$OS-$ARCH.tar.gz
+
+    OS=$(go env GOOS)
+    ARCH=$(go env GOARCH)
+    curl -sSL -o cmctl.tar.gz https://github.com/cert-manager/cert-manager/releases/download/v1.7.2/cmctl-$OS-$ARCH.tar.gz
     tar xzf cmctl.tar.gz
     sudo mv cmctl /usr/local/bin
     rm ./cmctl.tar.gz ./LICENSES
 fi
 
-
 # krew #################################################################
- FILE=$HOME/.krew/bin/kubectl-krew
- FILE_NAME=kubectl-krew
- if [ -f "$FILE" ]; then
+FILE=$HOME/.krew/bin/kubectl-krew
+FILE_NAME=kubectl-krew
+if [ -f "$FILE" ]; then
     echo "$(tput setaf 2)$FILE_NAME está instalado!$(tput sgr0)"
     kubectl-krew version
- else 
+else
     echo "$(tput setaf 2)Instalando $FILE_NAME...$(tput sgr0)"
-    
+
     (
-    set -x; cd "$(mktemp -d)" &&
-    OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
-    ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&
-    KREW="krew-${OS}_${ARCH}" &&
-    curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&
-    tar zxvf "${KREW}.tar.gz" &&
-    ./"${KREW}" install krew
+        set -x
+        cd "$(mktemp -d)" &&
+            OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
+            ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&
+            KREW="krew-${OS}_${ARCH}" &&
+            curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&
+            tar zxvf "${KREW}.tar.gz" &&
+            ./"${KREW}" install krew
     )
-    echo  'export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"' >> $HOME/.bashrc
+    echo 'export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"' >>$HOME/.bashrc
     export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
-    
- fi
+
+fi
 
 # kubectl-minio #################################################################
- FILE=$HOME/.krew/bin/kubectl-minio
- FILE_NAME=kubectl-minio
- if [ -f "$FILE" ]; then
+FILE=$HOME/.krew/bin/kubectl-minio
+FILE_NAME=kubectl-minio
+if [ -f "$FILE" ]; then
     echo "$(tput setaf 2)$FILE_NAME está instalado!$(tput sgr0)"
     kubectl-minio version
- else 
+else
     echo "$(tput setaf 2)Instalando $FILE_NAME...$(tput sgr0)"
-   
+
     kubectl krew update
-    
+
     kubectl krew install minio
 
 fi
