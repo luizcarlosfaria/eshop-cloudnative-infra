@@ -12,11 +12,10 @@ metadata:
   name: app-secret
   namespace: eshop-resources
 data:
-## username: eshop
-## password: J9Of0497BM@c$Bs
+  ## username: eshop
+  ## password: J9Of0497BM@c$Bs
   username: ZXNob3A=
   password: SjlPZjA0OTdCTUBjJEJz
-
 
 ---
 apiVersion: v1
@@ -26,11 +25,10 @@ metadata:
   name: kong-secret
   namespace: eshop-resources
 data:
-## username: konguser
-## password: qAix6zjWBLpZ%6Tk&B0u
+  ## username: konguser
+  ## password: qAix6zjWBLpZ%6Tk&B0u
   username: a29uZ3VzZXI=
   password: cUFpeDZ6aldCTHBaJTZUayZCMHU=
-
 
 ---
 apiVersion: v1
@@ -40,12 +38,10 @@ metadata:
   name: superuser-secret
   namespace: eshop-resources
 data:
-## username: postgres
-## password: postgresJ9Of0497BM@c$Bs
+  ## username: postgres
+  ## password: postgresJ9Of0497BM@c$Bs
   username: cG9zdGdyZXM=
   password: cG9zdGdyZXNKOU9mMDQ5N0JNQGMkQnM=
-
-
 
 ---
 apiVersion: postgresql.cnpg.io/v1
@@ -69,5 +65,5 @@ spec:
       secret:
         name: app-secret
   storage:
-    storageClass: local-path
+    storageClass: longhorn
     size: 4Gi

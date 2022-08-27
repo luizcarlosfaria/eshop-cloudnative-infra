@@ -18,7 +18,7 @@ spec:
   service:
     type: ClusterIP
   persistence:
-    storageClassName: local-path
+    storageClassName: longhorn
     storage: 10Gi
   resources:
     requests:
@@ -35,24 +35,46 @@ spec:
       collect_statistics = fine
       collect_statistics_interval = 1000
 
-
 ---
-kind: Ingress
-apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# apiVersion: networking.k8s.io/v1
+# metadata:
+#   name: rabbitmq-ingress
+#   namespace: eshop-resources
+# spec:
+#   rules:
+#     - host: "rabbitmq-188-40-114-31.nip.io"
+#       http:
+#         paths:
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: rabbitmq
+#                 port:
+#                   number: 15672
+---
+kind: Service
+apiVersion: v1
 metadata:
-  name: rabbitmq-ingress
+  name: rabbitmq-nodeport
   namespace: eshop-resources
-  #annotations:
-    #ingress.kubernetes.io/ssl-redirect: "false"
+  labels:
+    app: rabbitmq
 spec:
-  rules:
-    - host: "rabbitmq-188-40-114-31.nip.io"
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: rabbitmq
-                port:
-                  number: 15672
+  ports:
+    - name: amqp
+      protocol: TCP
+      appProtocol: amqp
+      port: 5672
+      targetPort: 5672
+      nodePort: 30780
+    - name: management
+      protocol: TCP
+      appProtocol: http
+      port: 15672
+      targetPort: 15672
+      nodePort: 30779
+  selector:
+    app.kubernetes.io/name: rabbitmq
+  type: NodePort

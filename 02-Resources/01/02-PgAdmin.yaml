@@ -79,26 +79,27 @@ data:
     DEBUG=True
     LOG_FILE='/var/lib/pgadmin/pgadmin4.log'
 
----
-kind: Ingress
-apiVersion: networking.k8s.io/v1
-metadata:
-  name: pgadmin-ingress
-  namespace: eshop-resources
-  annotations:
-    ingress.kubernetes.io/ssl-redirect: "false"
-spec:
-  rules:
-    - host: "pgadmin-188-40-114-31.nip.io"
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: pgadmin-service
-                port:
-                  number: 80
+
+# ---
+# kind: Ingress
+# apiVersion: networking.k8s.io/v1
+# metadata:
+#   name: pgadmin-ingress
+#   namespace: eshop-resources
+#   annotations:
+#     ingress.kubernetes.io/ssl-redirect: "false"
+# spec:
+#   rules:
+#     - host: "pgadmin-188-40-114-31.nip.io"
+#       http:
+#         paths:
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: pgadmin-service
+#                 port:
+#                   number: 80
 
 ---
 kind: Service
@@ -110,15 +111,15 @@ metadata:
   namespace: eshop-resources
 spec:
   ports:
-    - protocol: TCP
+    - name: web
+      protocol: TCP
+      appProtocol: http
       port: 80
       targetPort: 80
-      #nodePort: 30779
+      nodePort: 30781
   selector:
     app: pgadmin
-  type: ClusterIP
-status:
-  loadBalancer: {}
+  type: NodePort
 
 ---
 kind: StatefulSet
@@ -148,7 +149,7 @@ spec:
           env:
             - name: TZ
               value: "America/Sao_Paulo"
-              
+
             - name: PGADMIN_CONFIG_PROXY_X_FOR_COUNT
               value: "1"
 
@@ -190,7 +191,6 @@ spec:
               containerPort: 80
               protocol: TCP
           volumeMounts:
-
             - name: pgadmin-config
               mountPath: /pgadmin4/servers.json
               subPath: servers.json
@@ -203,8 +203,11 @@ spec:
 
             - name: pgadmin-data
               mountPath: /var/lib/pgadmin
-      volumes:
 
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsUser: 0
+      volumes:
         - name: pgadmin-config
           configMap:
             name: pgadmin-config
@@ -220,5 +223,4 @@ spec:
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
-            storage: 3Gi
-    
+            storage: 1Gi

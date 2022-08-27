@@ -14,34 +14,34 @@ spec:
   imagePullSecret: {}
   mountPath: /export
   pools:
-  - affinity:
-      podAntiAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-        - labelSelector:
-            matchExpressions:
-            - key: v1.min.io/tenant
-              operator: In
-              values:
-              - eshop
-          topologyKey: kubernetes.io/hostname
-    resources: {}
-    servers: 2
-    volumeClaimTemplate:
-      apiVersion: v1
-      kind: persistentvolumeclaims
-      metadata:
-        creationTimestamp: null
-      spec:
-        accessModes:
-        - ReadWriteOnce
-        resources:
-          requests:
-            storage: 2T
-      status: {}
-    volumesPerServer: 2
+    - affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: v1.min.io/tenant
+                    operator: In
+                    values:
+                      - eshop
+              topologyKey: kubernetes.io/hostname
+      resources: {}
+      servers: 2
+      volumeClaimTemplate:
+        apiVersion: v1
+        kind: persistentvolumeclaims
+        metadata:
+          creationTimestamp: null
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 2T
+        status: {}
+      volumesPerServer: 2
   requestAutoCert: true
   users:
-  - name: eshop-user-1
+    - name: eshop-user-1
 status:
   availableReplicas: 0
   certificates: {}
@@ -72,7 +72,6 @@ metadata:
   creationTimestamp: null
   name: eshop-user-1
   namespace: eshop-resources
-
 
 ---
 kind: Ingress
