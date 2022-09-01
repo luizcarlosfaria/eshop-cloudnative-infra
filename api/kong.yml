@@ -1,12 +1,19 @@
 _format_version: "1.1"
 
 services:
+  - name: minio
+    url: http://minio:9000
+    routes:
+      - name: minio-route
+        paths:
+          - /minio
+
   - name: catalog
     url: http://eShopCloudNative.Catalog.WebApi
     routes:
-      - name: my-route
+      - name: catalog-route
         paths:
-          - /
+          - /catalog
 
 plugins:
   # - name: proxy-cache
