@@ -6,7 +6,13 @@
 # License text available at https://opensource.org/licenses/MIT
 #=============================================================================
 
-# dashboard #################################################################
+################################
+## v1 ------------
 
-echo "$(tput setaf 2)Criando namespaces de projeto...$(tput sgr0)"
-kubectl apply -f ./04-namespaces.yaml
+set echo off
+
+chmod -R +x ./**/*.sh
+
+cd ./02-Resources/
+
+./run.sh
