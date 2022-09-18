@@ -3,6 +3,7 @@ _format_version: "1.1"
 services:
   - name: minio
     url: http://minio:9000
+    host: localhost
     routes:
       - name: minio-route
         paths:
@@ -28,8 +29,13 @@ plugins:
         - "text/plain"
         - "application/json; charset=utf-8"
         - "application/json"
-        - "image/*"
-      cache_ttl: 30
+        - "image/jpg"
+        - "image/jpeg"
+        - "image/webp"
+        - "image/png"
+        - "*/*"
+      cache_ttl: 6000
+      storage_ttl: 12000
       strategy: memory
 
   - name: proxy-cache
@@ -43,9 +49,8 @@ plugins:
         - "text/plain"
         - "application/json; charset=utf-8"
         - "application/json"
-        - "image/*"
       cache_ttl: 10
-      storage_ttl: 180
+      storage_ttl: 60
       strategy: memory
 
   - name: key-auth
@@ -56,9 +61,9 @@ plugins:
         - apikey
 
   # - name: http-log
-  #   service: catalog
+  #   service: minio
   #   config:
-  #     http_endpoint: https://webhook.site/fcbd8eb6-b4b7-4f00-b0f0-130540c89756
+  #     http_endpoint: https://webhook.site/2e779446-6422-4385-96f2-2356413b943a
   #     method: POST
   #     timeout: 1000
   #     keepalive: 1000
