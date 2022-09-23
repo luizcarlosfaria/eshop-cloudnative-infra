@@ -49,8 +49,9 @@ plugins:
         - "text/plain"
         - "application/json; charset=utf-8"
         - "application/json"
-      cache_ttl: 15
-      storage_ttl: 60
+      cache_control: true
+      cache_ttl: 30
+      storage_ttl: 30
       strategy: memory
 
   - name: key-auth
