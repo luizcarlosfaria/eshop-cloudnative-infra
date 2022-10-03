@@ -10,7 +10,7 @@ services:
           - /minio
 
   - name: catalog
-    url: http://catalog_primaryadapters
+    url: http://catalog_host
     routes:
       - name: catalog-route
         paths:
@@ -38,21 +38,21 @@ plugins:
       storage_ttl: 12000
       strategy: memory
 
-  - name: proxy-cache
-    service: catalog
-    config:
-      response_code:
-        - 200
-      request_method:
-        - GET
-      content_type:
-        - "text/plain"
-        - "application/json; charset=utf-8"
-        - "application/json"
-      cache_control: true
-      cache_ttl: 30
-      storage_ttl: 30
-      strategy: memory
+  # - name: proxy-cache
+  #   service: catalog
+  #   config:
+  #     response_code:
+  #       - 200
+  #     request_method:
+  #       - GET
+  #     content_type:
+  #       - "text/plain"
+  #       - "application/json; charset=utf-8"
+  #       - "application/json"
+  #     cache_control: true
+  #     cache_ttl: 60
+  #     storage_ttl: 60
+  #     strategy: memory
 
   - name: key-auth
     service: catalog
