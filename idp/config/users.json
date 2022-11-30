@@ -1,0 +1,127 @@
+[
+    {
+        "SubjectId": "1",
+        "Username": "user1",
+        "Password": "pwd",
+        "Claims": [
+            {
+                "Type": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name",
+                "Value": "Fraser Mcconnell"
+            },
+            {
+                "Type": "name",
+                "Value": "Fraser Mcconnell"
+            },
+            {
+                "Type": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
+                "Value": "fraser.mcconnell@gmail.com"
+            },
+            {
+                "Type": "email",
+                "Value": "fraser.mcconnell@gmail.com"
+            },
+            {
+                "Type": "email_verified",
+                "Value": "true"
+            },
+            /*{
+                "Type": "resource_access",
+                "Value": "{\"jornada.gago.io\":{\"roles\":[\"jornada.participar\",\"jornada.gerenciar.editar\",\"jornada.gerenciar\",\"jornada.gerenciar.adicionar\",\"admin\",\"jornada.gerenciar.remover\"]}}",
+                "Issuer": "https://id.gago.io/auth/realms/gago",
+                "ValueType": "JSON"
+            },*/
+            {
+                "Type": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
+                "Value": "admin"
+            },
+            {
+                "Type": "ui_color",
+                "Value": "bg-primary"
+            },
+            {
+                "Type": "ui_btn_color",
+                "Value": "bg-success"
+            }
+        ]
+    },
+    {
+        "SubjectId": "2",
+        "Username": "user2",
+        "Password": "pwd",
+        "Claims": [
+            {
+                "Type": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name",
+                "Value": "Christopher Davila"
+            },
+            {
+                "Type": "name",
+                "Value": "Christopher Davila"
+            },
+            {
+                "Type": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
+                "Value": "christopher.davila@gmail.com"
+            },
+            {
+                "Type": "email",
+                "Value": "christopher.davila@gmail.com"
+            },
+            {
+                "Type": "email_verified",
+                "Value": "true"
+            },
+            {
+                "Type": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
+                "Value": "user"
+            },
+            {
+                "Type": "ui_color",
+                "Value": "bg-success"
+            },
+            {
+                "Type": "ui_btn_color",
+                "Value": "bg-primary"
+            }
+
+        ]
+    },
+    {
+        "SubjectId": "3",
+        "Username": "user3",
+        "Password": "pwd",
+        "Claims": [
+            {
+                "Type": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name",
+                "Value": "Luiz Carlos Faria"
+            },
+            {
+                "Type": "name",
+                "Value": "Luiz Carlos Faria"
+            },
+            {
+                "Type": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
+                "Value": "luiz-carlos-faria@gmail.com"
+            },
+            {
+                "Type": "email",
+                "Value": "luiz-carlos-fariaa@gmail.com"
+            },
+            {
+                "Type": "email_verified",
+                "Value": "true"
+            },
+            {
+                "Type": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
+                "Value": "user"
+            },
+            {
+                "Type": "ui_color",
+                "Value": "bg-dark"
+            },
+            {
+                "Type": "ui_btn_color",
+                "Value": "bg-primary"
+            }
+
+        ]
+    }
+]
